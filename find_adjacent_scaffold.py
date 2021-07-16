@@ -1,4 +1,3 @@
-#import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -17,11 +16,11 @@ def parse(xyz_name):
 
 # builds adjacency matrix, with no cutoffs
 
-# from an adjacency matrix, it extracts which atoms are < cutoff aways
+# from an adjacency matrix, zeros out all distances > 2, and anything below 2 is turned to 1
+# build a stripped down connectivity matrix, based on some cutoff
 
 # plots the adjacency matrix, with some cutoff
 def plot(adjacency, cutoff = 2.0):
-    adjacency = np.where(adjacency <= cutoff, adjacency, 0)
     graph = nx.from_numpy_matrix(adjacency, create_using=nx.MultiGraph)
     nx.draw(graph, with_labels=True, font_weight='bold')
     plt.savefig("graph.png")
@@ -29,11 +28,10 @@ def plot(adjacency, cutoff = 2.0):
 
 # outputs the bonds csv
 def output_csv(mat, outname):
-    #np.savetxt(outname, mat, delimiter=",")
     np.savetxt(outname, mat, delimiter=",", fmt='%u')
 
 
-#xyz = parse('xyz/benzene.xyz')
+#xyz = parse('xyz/allyl.xyz')
 #plot(adjacency) 
-#output_csv(bonds, "benzene_bonds.csv")
+#output_csv(bonds, "adjacency/allyl.csv")
 

@@ -1,7 +1,14 @@
-#import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
+import sys
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print("Please specify xyz input file and adjacency outfile.")
+    else:
+        inname = sys.argv[1]
+        outname = sys.argv[2]
 
 
 # parses the coordinates from an xyz file
@@ -47,24 +54,14 @@ def find_adjacency(xyz):
     #print(adjacency)
     return adjacency
 
-# from an adjacency matrix, it extracts which atoms are < cutoff aways
-def find_bonds(adjacency, cutoff = 2.0):
-    n_cs = len(adjacency)
-    bonds = []
-    for i in range(n_cs):
-        neighbs = []
-        for j in range(n_cs):
-            if i == j:
-                continue
-            if adjacency[i,j] < cutoff:
-                neighbs.append(j)
-        bonds.append(neighbs)
-    #print(bonds)
-    return bonds
+# build a stripped down connectivity matrix, based on some cutoff
+def strip_down(adjacency, cutoff = 2.0):
+    adjacency = np.where(adjacency <= cutoff, adjacency, 0)
+    adjacency = np.where(adjacency < 0.1, adjacency, 1)
+    return adjacency
 
 # plots the adjacency matrix, with some cutoff
 def plot(adjacency, cutoff = 2.0):
-    adjacency = np.where(adjacency <= cutoff, adjacency, 0)
     graph = nx.from_numpy_matrix(adjacency, create_using=nx.MultiGraph)
     nx.draw(graph, with_labels=True, font_weight='bold')
     plt.savefig("graph.png")
@@ -72,19 +69,14 @@ def plot(adjacency, cutoff = 2.0):
 
 # outputs the bonds csv
 def output_csv(mat, outname):
-    #np.savetxt(outname, mat, delimiter=",")
     np.savetxt(outname, mat, delimiter=",", fmt='%u')
 
 
-#xyz = parse('xyz/butadienyl.xyz')
-#xyz = parse('xyz/benzene.xyz')
-xyz = parse('xyz/c60.xyz')
+xyz = parse(inname)
 c_xyz = keep_carbons(xyz)
 adjacency = find_adjacency(c_xyz)
 print(adjacency)
-bonds = find_bonds(adjacency)
-print(bonds)
+adjacency = strip_down(adjacency)
 plot(adjacency) 
-#output_csv(bonds, "benzene_bonds.csv")
-output_csv(bonds, "c60_bonds.csv")
+output_csv(adjacency, outname)
 

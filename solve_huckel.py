@@ -1,26 +1,31 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Please specify adjacency infile.")
+    else:
+        inname = sys.argv[1]
+
 
 # parses a csv file into a numpy array
 def parse(csv_name):
-    bonds = pd.read_csv(csv_name, sep=',', header=None)
-    bonds = np.array(bonds)
-    return bonds
+    adjacency = pd.read_csv(csv_name, sep=',', header=None)
+    adjacency = np.array(adjacency)
+    return adjacency
 
 # based on some values of alpha and beta, builds the huckel hamiltonian
-def build_hamil(alpha, beta, bonds):
-    dim = len(bonds)
+def build_hamil(alpha, beta, adjacency):
+    dim = len(adjacency)
     ham = np.zeros((dim,dim))
     
     for i in range(dim):
         ham[i,i] = alpha
     
-    for i in range(dim):
-        neighbs = bonds[i]
-        for neighb in neighbs:
-            ham[i, neighb] = beta
-    #print(ham)
+    ham += beta*adjacency
+    print(ham)
     return ham
 
 # finds eigenvectors/eigenvalues of a matrix
@@ -46,7 +51,7 @@ def plot(eigvals):
 alpha = -3 #-11.2
 beta = -2 #-3.5
 
-bonds = parse('c60_bonds.csv')
-hamiltonian = build_hamil(alpha, beta, bonds)
+adjacency = parse(inname)
+hamiltonian = build_hamil(alpha, beta, adjacency)
 eigvals, eigvecs = diagonalize(hamiltonian)
 plot(eigvals)
