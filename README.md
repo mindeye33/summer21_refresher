@@ -1,6 +1,9 @@
 # summer21_refresher first assignment
 
-The pdf has the problem statement
-The *.py have the answer in python
-The *scaffold.py is for initial start
-Folders contain geometries and adjacency matrices
+0 The pdf has the problem statement
+
+0 The *.py have the answer in python
+
+0 The *scaffold.py is for initial start
+
+0 Folders contain geometries and adjacency matrices
