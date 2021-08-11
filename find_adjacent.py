@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
 
 # parses the coordinates from an xyz file
-def parse(xyz_name):
+def parse_xyz(xyz_name):
     # make a new datatype (numpy.void)
     xyz_row_format = np.dtype(dtype=[('element', 'U1'), ('x', 'f8'), ('y', 'f8'),('z', 'f8')])
     xyz = np.genfromtxt(xyz_name, skip_header=2, dtype=xyz_row_format)
@@ -61,7 +61,7 @@ def strip_down(adjacency, cutoff = 2.0):
     return adjacency
 
 # plots the adjacency matrix, with some cutoff
-def plot(adjacency, cutoff = 2.0):
+def plot_graph(adjacency, cutoff = 2.0):
     graph = nx.from_numpy_matrix(adjacency, create_using=nx.MultiGraph)
     nx.draw(graph, with_labels=True, font_weight='bold')
     plt.savefig("graph.png")
@@ -72,11 +72,12 @@ def output_csv(mat, outname):
     np.savetxt(outname, mat, delimiter=",", fmt='%u')
 
 
-xyz = parse(inname)
-c_xyz = keep_carbons(xyz)
-adjacency = find_adjacency(c_xyz)
-print(adjacency)
-adjacency = strip_down(adjacency)
-plot(adjacency) 
-output_csv(adjacency, outname)
+if __name__ == "__main__":
+    xyz = parse_xyz(inname)
+    c_xyz = keep_carbons(xyz)
+    adjacency = find_adjacency(c_xyz)
+    print(adjacency)
+    adjacency = strip_down(adjacency)
+    plot_graph(adjacency) 
+    output_csv(adjacency, outname)
 

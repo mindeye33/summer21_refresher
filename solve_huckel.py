@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
 
 # parses a csv file into a numpy array
-def parse(csv_name):
+def parse_csv(csv_name):
     adjacency = pd.read_csv(csv_name, sep=',', header=None)
     adjacency = np.array(adjacency)
     return adjacency
@@ -36,7 +36,7 @@ def diagonalize(ham):
 
 
 #plots eigenvalues and saves it to mo_diagram.png
-def plot(eigvals):
+def plot_orbdiag(eigvals):
     x = np.array(range(len(eigvals)))
     y = np.array(eigvals)
     plt.scatter(x, y, c="b", marker="_")
@@ -48,10 +48,11 @@ def plot(eigvals):
     #plt.show()
 
 
-alpha = -3 #-11.2
-beta = -2 #-3.5
-
-adjacency = parse(inname)
-hamiltonian = build_hamil(alpha, beta, adjacency)
-eigvals, eigvecs = diagonalize(hamiltonian)
-plot(eigvals)
+if __name__ == "__main__":
+    alpha = -3 #-11.2
+    beta = -2 #-3.5
+    
+    adjacency = parse_csv(inname)
+    hamiltonian = build_hamil(alpha, beta, adjacency)
+    eigvals, eigvecs = diagonalize(hamiltonian)
+    plot_orbdiag(eigvals)
